@@ -5,8 +5,8 @@
 import json
 import chess.pgn # From python-chess https://github.com/niklasf/python-chess
 
-pgn = open("millionbase-2.22.pgn") # Or where you have put it
-fout = open('milionbase-2.22.json', 'w') # Or where you want it
+pgn = open("../data/KingBaseLite2015-05-A80-A99.pgn") # Or where you have put it
+fout = open('../data/KingBaseLite2015-05-A80-A99.json', 'w') # Or where you want it
 
 count = 0
 node = chess.pgn.read_game(pgn)
@@ -26,3 +26,4 @@ while node != None:
     print(count)
 
 fout.close()
+print "ready"
