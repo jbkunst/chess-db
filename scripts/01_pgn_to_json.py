@@ -22,7 +22,7 @@ while node != None:
   json.dump(info, fout, encoding='latin1')
   fout.write('\n')
   count += 1
-  if(count % 10000 == 0):
+  if(count % 100 == 0):
     print(count)
 
 fout.close()
