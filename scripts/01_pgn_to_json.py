@@ -2,8 +2,10 @@ import json
 import time
 import chess.pgn
 
-pgn = open("../data/KingBaseLite2015-05-A80-A99.pgn")
-fout = open('../data/KingBaseLite2015-05-A80-A99.json', 'w')
+
+# I prefer running in sublimetext instead RStudio (system can)
+pgn = open("../data/sample.pgn")
+fout = open("../data/sample.json", "w")
 
 t0 = time.clock()
 
@@ -25,14 +27,13 @@ while node != None:
   info["fen"].append(node.board().fen())
   node = chess.pgn.read_game(pgn)
 
-  json.dump(info, fout, encoding='latin1')
-  fout.write('\n')
+  json.dump(info, fout, encoding="latin1")
+  fout.write("\n")
   count += 1
   
   if(count % 10 == 0):
-    print(count)
+    print count, "games in", int((time.clock() - t0)), "seconds"
 
 fout.close()
 
-print (time.clock() - t0)/count, "seconds per game"
-print "ready " + str(count) + " games"
+print "ready",  count, "games.", (time.clock() - t0)/count, "seconds per game"
