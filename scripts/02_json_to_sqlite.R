@@ -12,9 +12,11 @@ library("dplyr")
 library("magrittr")
 
 
-#### parameters ####
-pgn_file <- "data/millionbase.json"
-db_path <- "data/chessdb.sqlite3"
+#### parameters ####basename(pgn_file)
+pgn_file <- "data/KingBaseLite.json"
+
+db_path <- sprintf("data/%s.sqlite3", gsub("\\.\\w+", "", basename(pgn_file)))
+                   
 chunk_size <- 100 # games per chunk
 
 
@@ -26,6 +28,8 @@ if (file.exists(db_path)) file.remove(db_path)
 db <- dbConnect(SQLite(), dbname = db_path)
 
 games_n <- as.numeric(strsplit(system(paste("wc -l", pgn_file), intern = TRUE), " ")[[1]][1])
+
+message(games_n, " games to parse!")
 
 # we apply chunks to send 100 rows at time instead 1 at time
 chunks <- split(seq(games_n), (seq(games_n) %/% (chunk_size)) + 1)
@@ -59,7 +63,7 @@ l_ply(chunks, function(chunk){ # chunk <- sample(chunks, 1)
                                fen = game_lst$fen,
                                pgn = c("", game_lst$pgn))
     
-    dbWriteTable(conn = db, name = "movements_aux", df_movements, row.names = FALSE, append = TRUE)
+    dbWriteTable(conn = db, name = "movements", df_movements, row.names = FALSE, append = TRUE)
     
     game_lst$pgn <- NULL
     
@@ -88,7 +92,7 @@ l_ply(chunks, function(chunk){ # chunk <- sample(chunks, 1)
 dbListTables(db)
 
 # The columns in a table
-dbListFields(db, "movements_aux")         
+dbListFields(db, "movements")         
 
 #### closing conecctions ####
 dbDisconnect(db)

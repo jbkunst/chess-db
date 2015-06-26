@@ -13,7 +13,7 @@ import os
 
 # Data is from http://www.kingbase-chess.net/ or/and www.top-5000.nl/pgn.htm
 
-pattern = #"millionbase" #"KingBaseLite" # 
+pattern = "KingBaseLite" #"millionbase" #"KingBaseLite" # 
 
 pgns = glob.glob("../data/" + pattern + "*.pgn")
 pgns = [pgn.replace("\\", "/") for pgn in pgns] # Maybe this is for windows
@@ -22,7 +22,7 @@ print pgns
 
 t0 = time.clock()
 
-max_pgn_per_file = 25
+max_pgn_per_file = 1000
 
 count = 0
 
