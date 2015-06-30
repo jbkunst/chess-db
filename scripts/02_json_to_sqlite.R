@@ -10,7 +10,7 @@ library("jsonlite")
 library("plyr")
 library("dplyr")
 library("magrittr")
-
+library("R.utils")
 
 #### parameters ####basename(pgn_file)
 pgn_file <- "data/KingBaseLite.json"
@@ -27,7 +27,8 @@ if (file.exists(db_path)) file.remove(db_path)
 
 db <- dbConnect(SQLite(), dbname = db_path)
 
-games_n <- as.numeric(strsplit(system(paste("wc -l", pgn_file), intern = TRUE), " ")[[1]][1])
+# games_n <- as.numeric(strsplit(system(paste("wc -l", pgn_file), intern = TRUE), " ")[[1]][1])
+games_n <- countLines(pgn_file)
 
 message(games_n, " games to parse!")
 
@@ -38,7 +39,7 @@ games_file <- file(pgn_file, "r")
 
 daux <- data_frame(id = NA, event = NA, site = NA, date = NA, round = NA,
                    white = NA, black = NA, result = NA, blackelo = NA, whiteelo = NA,
-                   eco = NA, movements = NA)
+                   eco = NA, eventdate = NA, movements = NA)
 
 #### move al infomation to db! ####
 l_ply(chunks, function(chunk){ # chunk <- sample(chunks, 1) 

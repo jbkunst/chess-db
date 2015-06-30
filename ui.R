@@ -10,11 +10,12 @@ bootstrapPage(
   
   fluidRow(
     column(6, chessboardOutput("board", width = "400px")),
-    column(6,
+    column(12,
            fluidRow(
-             column(12, chessboardOutput("board1", width = "200px")),
-             column(12, chessboardOutput("board2", width = "200px")),
-             column(12, chess("board3", width = "200px"))
+             column(3, chessboardOutput("board1", width = "100%")),
+             column(3, chessboardOutput("board2", width = "100%")),
+             column(3, chessboardOutput("board3", width = "100%")),
+             column(3, chessboardOutput("board4", width = "100%"))
              )
            )
     )

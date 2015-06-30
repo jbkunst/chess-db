@@ -34,7 +34,6 @@ movements %>% filter(movement == 2) %>% group_by(pgn) %>% summarise(n = n()) %>%
 movements %>% compute() %>% nrow()
 movements %>% select(fen) %>% distinct() %>% compute() %>% nrow()
 
-
 games %>% filter(id == 1)
 movements %>% filter(game_id == 1) %>% compute()
 
