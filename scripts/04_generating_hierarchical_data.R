@@ -44,11 +44,12 @@ movements_spread_group <- movements_spread %>%
   arrange(desc(size)) %>% 
   plyr::join(., movements_spread, by = "pgn", match = "first") %>% 
   tbl_df() %>% 
-  select(-game_id)
+  select(-game_id, -pgn)
 
-
-msgm <- movements_spread_group %>% select(-pgn, -size) %>% arrange_(names(.))
-
+movements_spread_group <- movements_spread_group %>%
+  select(-size) %>%
+  cbind(movements_spread_group %>% select(size)) %>% 
+  tbl_df()
 
 
 
@@ -59,20 +60,31 @@ rsplit <- function(x) {
   
   if(nrow(x)==0) return(NULL)
   
-  if(ncol(x)==1) return(lapply(x[,1], function(v) list(name=v)))
+  if(ncol(x)==2) {
+    return(x)
+  }
   
   s <- split(x[,-1, drop=FALSE], x[,1])
   
   unname(mapply(function(v,n) {
     if(!is.null(v)) {
-      list(name=n, children=v)
+      list(name = n , children=v)
     } else {
       list(name=n)
     }
   }, lapply(s, rsplit), names(s), SIMPLIFY=FALSE))
 }
 
-rsplit(msgm)
 
-toJSON(rsplit(msgm))
+jotason <- rsplit(movements_spread_group)
+
+jotason2 <- jsonlite::toJSON(jotason, pretty = TRUE, auto_unbox = TRUE)
+
+writeLines(jotason2, "../vizs/d3-coffe-wheel-sunburst/test.json")
+
+jotason <- rsplit(movements_spread_group)
+
+jotason2 <- jsonlite::toJSON(jotason[[1]], pretty = TRUE, auto_unbox = TRUE)
+
+writeLines(jotason2, "../vizs/d3-zoomable-sunburst/test.json")
 
