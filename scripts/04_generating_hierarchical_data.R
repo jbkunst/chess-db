@@ -23,7 +23,7 @@ db <- dbConnect(SQLite(), dbname = db_path)
 dbListTables(db)
 
 #### Using tidyr's spread ####
-deep <- 6
+deep <- 7
 
 games <- tbl(chessdb, "games")
 
@@ -58,4 +58,6 @@ movements_hierarchy <- rsplit(movements_spread_group)
 movements_json <- toJSON(movements_hierarchy[[1]], pretty = TRUE, auto_unbox = TRUE)
 
 writeLines(movements_json, "../vizs/d3-zoomable-sunburst/test.json")
+writeLines(movements_json, "../vizs/d3-icicle/test.json")
+writeLines(movements_json, "../vizs/d3-cluster-dendrogram/test.json")
 
