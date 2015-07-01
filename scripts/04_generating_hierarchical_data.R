@@ -4,11 +4,13 @@ options(stringsAsFactors = FALSE)
 
 
 #### packages ####
+source("scripts/00_r_utils.R")
 library("RSQLite")
 library("DBI")
 library("plyr")
 library("dplyr")
 library("tidyr")
+library("jsonlite")
 
 
 #### opening connections ####
@@ -21,7 +23,7 @@ db <- dbConnect(SQLite(), dbname = db_path)
 dbListTables(db)
 
 #### Using tidyr's spread ####
-deep <- 5
+deep <- 6
 
 games <- tbl(chessdb, "games")
 
@@ -51,40 +53,9 @@ movements_spread_group <- movements_spread_group %>%
   cbind(movements_spread_group %>% select(size)) %>% 
   tbl_df()
 
+movements_hierarchy <- rsplit(movements_spread_group)
 
+movements_json <- toJSON(movements_hierarchy[[1]], pretty = TRUE, auto_unbox = TRUE)
 
-
-rsplit <- function(x) {
-  
-  x <- x[!is.na(x[,1]),,drop=FALSE]
-  
-  if(nrow(x)==0) return(NULL)
-  
-  if(ncol(x)==2) {
-    return(x)
-  }
-  
-  s <- split(x[,-1, drop=FALSE], x[,1])
-  
-  unname(mapply(function(v,n) {
-    if(!is.null(v)) {
-      list(name = n , children=v)
-    } else {
-      list(name=n)
-    }
-  }, lapply(s, rsplit), names(s), SIMPLIFY=FALSE))
-}
-
-
-jotason <- rsplit(movements_spread_group)
-
-jotason2 <- jsonlite::toJSON(jotason, pretty = TRUE, auto_unbox = TRUE)
-
-writeLines(jotason2, "../vizs/d3-coffe-wheel-sunburst/test.json")
-
-jotason <- rsplit(movements_spread_group)
-
-jotason2 <- jsonlite::toJSON(jotason[[1]], pretty = TRUE, auto_unbox = TRUE)
-
-writeLines(jotason2, "../vizs/d3-zoomable-sunburst/test.json")
+writeLines(movements_json, "../vizs/d3-zoomable-sunburst/test.json")
 
