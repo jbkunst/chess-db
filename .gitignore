@@ -2,6 +2,7 @@
 .Rhistory
 data/*
 data_pgn/*
+data_sqlite/*
 
 
 # Example code in package build process
