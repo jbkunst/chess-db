@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 data/*
+data_pgn/*
 
 
 # Example code in package build process
