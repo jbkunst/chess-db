@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 data-raw/*
+data-rdata/*
 data-tsv/*
 data-sqlite/*
 data-gzip/*
