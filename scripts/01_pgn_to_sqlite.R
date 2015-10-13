@@ -30,7 +30,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
   
   t0 <- Sys.time()
   
-  if(VERBOSE) print(f)
+  if (VERBOSE) print(f)
   
   flines <- readLines(f)
   
@@ -70,7 +70,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
   
   df_games <- df_games %>% 
     select(Event, Site, Date, Round, White, Black, Result,
-           WhiteElo, BlackElo, ECO, id, moves) %>% 
+           WhiteElo, BlackElo, ECO, moves) %>% 
     mutate(Date = str_replace_all(Date, "\\.", "-"),
            WhiteElo = as.numeric(WhiteElo),
            BlackElo = as.numeric(BlackElo)) %>% 
@@ -81,7 +81,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
   
   diff <- difftime(Sys.time(), t0, units = "hours")
   
-  df_summary <- data_frame(file_from, ngames = nrow(df_games), time_hrs = diff)
+  df_summary <- data_frame(f, ngames = nrow(df_games), time_hrs = diff)
   
   print(df_summary)
   

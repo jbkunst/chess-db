@@ -31,14 +31,22 @@ str(games)
 
 games <- games %>% select(-id, -file_from)
 
+
+
 #### Export ####
+l_ply(unique(games$eco), function(e){ e <- sample(unique(games$eco), size = 1)
+  games_aux <- games %>% filter(eco == e)
+  
+  write.table(games_aux, file = file.path(PATH_TSV, sprintf("games_eco_%s.txt", e)),
+              quote = FALSE, sep = "\t", row.names = FALSE)
+  
+  gz <- gzfile(file.path(PATH_GZIP,  sprintf("games_eco_%s.txt.gz", e)), "w")
+  write.table(games_aux, file = gz, quote = FALSE, sep = "\t", row.names = FALSE)
+  close(gz)
+  
+}, .progress = "text")
+
 save(games, file = file.path(PATH_RDATA, "games.RData"))
-write.table(games, file = file.path(PATH_TSV, "game.tsv"), quote = FALSE, sep = "\t", row.names = FALSE)
-
-
-gz <- gzfile(file.path(PATH_GZIP, "games.tsv.gz"), "w")
-write.table(games, file = gz, quote = FALSE, sep = "\t", row.names = FALSE)
-close(gz)
 
 
 #### Examples ####
@@ -50,3 +58,6 @@ out <- games %>% head(10)
 writeLines(int, con = "example_input.pgn")
 write.table(out, file = "example_output.tsv", quote = FALSE, sep = "\t", row.names = FALSE)
 write_csv(out, "example_output.csv")
+
+
+
