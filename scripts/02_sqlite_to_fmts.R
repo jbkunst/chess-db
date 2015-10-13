@@ -7,6 +7,7 @@ library("readr")
 
 #### Parameters ####
 PATH_TSV <- "data-tsv"
+PATH_CSV <- "data-csv"
 PATH_GZIP <- "data-gzip"
 PATH_RDATA <- "data-rdata"
 PATH_SQL <- "data-sqlite"
@@ -30,7 +31,7 @@ games <- tbl(chessdb, "games") %>% collect()
 str(games)
 
 
-#### Export ####
+#### Export by parts ####
 l_ply(unique(games$eco), function(e){ e <- sample(unique(games$eco), size = 1)
   games_aux <- games %>% filter(eco == e)
   
@@ -42,6 +43,12 @@ l_ply(unique(games$eco), function(e){ e <- sample(unique(games$eco), size = 1)
   close(gz)
   
 }, .progress = "text")
+
+#### Export All ####
+
+write_csv(games, file.path(PATH_CSV, "games.csv.gzip"))
+
+write_csv(games, file.path(PATH_CSV, "games.csv"))
 
 save(games, file = file.path(PATH_RDATA, "games.RData"))
 
