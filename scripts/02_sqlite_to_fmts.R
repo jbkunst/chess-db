@@ -49,4 +49,4 @@ out <- games %>% head(10)
 
 writeLines(int, con = "example_input.pgn")
 write.table(out, file = "example_output.tsv", quote = FALSE, sep = "\t", row.names = FALSE)
-write.table(out, file = "example_output.csv", quote = FALSE, sep = ";", row.names = FALSE)
+write_csv(out, "example_output.csv")
