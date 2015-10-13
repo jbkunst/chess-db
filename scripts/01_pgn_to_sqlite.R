@@ -26,26 +26,6 @@ db <- dbConnect(SQLite(), dbname = DB_PATH)
 files_pgn <- dir(PATH_RAWDATA, pattern = ".*pgn$", full.names = TRUE)
 files_pgn
 
-games_by_file <- laply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-B00-B19.pgn"  
-  
-  if(VERBOSE) message(f)
-  
-  flines <- readLines(f)
-  where_is_no_info <- which(str_length(flines) == 0)
-  where_is_no_info <- where_is_no_info[seq(length(where_is_no_info)) %% 2 == 0]
-  where_is_no_info <- c(0, where_is_no_info)
-  df_cuts <- data_frame(from = head(where_is_no_info, -1) + 1,
-                       to = tail(where_is_no_info, -1) - 1)
-  nrow(df_cuts)
-})
-
-summary(games_by_file)
-cumsum(games_by_file)
-padwidth <- nchar(max(games_by_file))
-# padwidth <- 6
-games_by_file <- data_frame(files_pgn, games_by_file)
-
-
 load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80-A99.pgn"
   
   t0 <- Sys.time()
@@ -61,12 +41,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
   df_cuts <- data_frame(from = head(where_is_no_info, -1) + 1,
                        to = tail(where_is_no_info, -1) - 1)
   
-  file_from <- str_extract(basename(f), "[A-Z]\\d{2}-[A-Z]\\d{2}")
-  
   df_games <- ldply(seq(nrow(df_cuts)), function(row){ # row <- 1814
-    
-    id <- str_pad(row, width = padwidth, pad = "0")
-    super_id <- sprintf("%s-%s", file_from, id)
     
     pgn <- flines[seq(df_cuts[row, ]$from, df_cuts[row, ]$to)]
     
@@ -87,8 +62,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
     df_game <- t(data_vals) %>%
       data.frame(stringsAsFactors = FALSE) %>%
       setNames(data_keys) %>%
-      mutate(id = super_id,
-             moves = paste0(moves, collapse = " "))
+      mutate(moves = paste0(moves, collapse = " "))
     
     df_game
     
@@ -97,8 +71,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- "data-raw/KingBase2015-09-A80
   df_games <- df_games %>% 
     select(Event, Site, Date, Round, White, Black, Result,
            WhiteElo, BlackElo, ECO, id, moves) %>% 
-    mutate(file_from = file_from,
-           Date = str_replace_all(Date, "\\.", "-"),
+    mutate(Date = str_replace_all(Date, "\\.", "-"),
            WhiteElo = as.numeric(WhiteElo),
            BlackElo = as.numeric(BlackElo)) %>% 
     setNames(tolower(names(.)))

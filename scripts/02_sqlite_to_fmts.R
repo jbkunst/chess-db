@@ -29,7 +29,7 @@ games <- tbl(chessdb, "games") %>% collect()
 
 str(games)
 
-games <- games %>% select(-id)
+games <- games %>% select(-id, -file_from)
 
 #### Export ####
 save(games, file = file.path(PATH_RDATA, "games.RData"))
