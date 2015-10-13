@@ -29,9 +29,6 @@ games <- tbl(chessdb, "games") %>% collect()
 
 str(games)
 
-games <- games %>% select(-id, -file_from)
-
-
 
 #### Export ####
 l_ply(unique(games$eco), function(e){ e <- sample(unique(games$eco), size = 1)
