@@ -3,6 +3,7 @@
 data-raw/*
 data-tsv/*
 data-sqlite/*
+data-gzip/*
 
 
 # Example code in package build process
