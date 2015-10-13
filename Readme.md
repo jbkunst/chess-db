@@ -12,7 +12,7 @@ Scripts for parse pgns files into a sqlite (tsv, RData) database/table.
 
 ## Input
 
-The input is a big list of pgn like this:
+The input is a big list of pgns like this:
 
 ```
 [Event "22. Abu Dhabi Masters"]
