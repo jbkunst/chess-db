@@ -7,7 +7,7 @@ Scripts for parse pgns files into a sqlite (tsv, RData) database/table.
 - Download a "chess database". For example you can download a big list of pgn from http://www.kingbase-chess.net/.
 - Put all the pgn files in the `data-raw` folder.
 - Then run the R scripts.
-- If you have a humble pc wait for 2-3 hours.
+- If you have a humble pc wait for 2-3 hours (if you download the 1.6M DB).
 - And enjoy your chess database ;) in sqslite, Rdata, tsv format!
 
 ## Input
