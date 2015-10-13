@@ -3,6 +3,7 @@
 data-raw/*
 data-rdata/*
 data-tsv/*
+data-csv/*
 data-sqlite/*
 
 
