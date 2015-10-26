@@ -2,7 +2,6 @@
 .Rhistory
 data-raw/*
 data-rdata/*
-data-gzip/*
 data-all/*
 data-tsv/*
 data-csv/*
