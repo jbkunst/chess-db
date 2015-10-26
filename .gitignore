@@ -7,6 +7,7 @@ data-all/*
 data-tsv/*
 data-csv/*
 data-sqlite/*
+data-sandbox/*
 
 
 # Example code in package build process
