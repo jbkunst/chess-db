@@ -15,14 +15,15 @@ PATH_SQL      <- "data-sqlite"
 DB_NAME       <- "db.sqlite"
 DB_PATH       <- file.path(PATH_SQL, DB_NAME) 
 
+PATH_RDATA    <- "data-rdata"
 PATH_GZIP     <- "data-gzip"
-PATH_ALL     <- "data-all"
+PATH_ALL      <- "data-all"
 
 VERBOSE       <- TRUE
 
 
 #### Folders ####
-l_ply(c(PATH_SQL, PATH_RDATA, PATH_GZIP), function(x){
+l_ply(c(PATH_SQL, PATH_RDATA, PATH_GZIP, PATH_ALL), function(x){
   unlink(x, recursive = TRUE)
   file.remove(x)
   dir.create(x)
@@ -50,7 +51,7 @@ load_times <- ldply(files_pgn, function(f){ # f <- sample(files_pgn, size = 1)
   df_cuts <- data_frame(from = head(where_is_no_info, -1) + 1,
                        to = tail(where_is_no_info, -1) - 1)
   
-  df_games <- ldply(seq(nrow(df_cuts)), function(row){ # row <- 1814
+  df_games <- ldply(seq(nrow(df_cuts)), function(row){ # row <- 10
     
     pgn <- flines[seq(df_cuts[row, ]$from, df_cuts[row, ]$to)]
     
@@ -84,9 +85,9 @@ load_times <- ldply(files_pgn, function(f){ # f <- sample(files_pgn, size = 1)
   dbWriteTable(conn = db, name = "games", as.data.frame(df_games),
                row.names = FALSE, append = TRUE)
   
-  eco <- str_extract(f, "[A-Z]{1}\\d{2}-[A-Z]{1}\\d{2}")
+  f2 <- str_replace(basename(f), "\\.\\w+", "")
   
-  gz <- gzfile(file.path(PATH_GZIP,  sprintf("games_eco_%s.txt.gz", eco)), "w")
+  gz <- gzfile(file.path(PATH_GZIP,  sprintf("games_%s.txt.gz", f2)), "w")
   write.table(df_games, file = gz, quote = FALSE, sep = "\t", row.names = FALSE)
   close(gz)
   
@@ -121,7 +122,12 @@ gz <- gzfile(file.path(PATH_ALL, "chess-db.txt.gz"), "w")
 write.table(dfgames, file = gz, quote = FALSE, sep = "\t", row.names = FALSE)
 close(gz)
 
-save(dfgames, file = file.path(PATH_ALL, "chess-db.RData"))
+save(dfgames, file = file.path(PATH_RDATA, "chess-db.RData"))
+
+# chesswc <- dfgames
+# save(chesswc, file = "../rchess/data/chesswc.rda")
+save(dfgames, file = file.path(PATH_RDATA, "chess-db.RData"))
+
 
 #### Examples ####
 pgn_example <- readLines("data-raw/KingBaseLite2015-10-A00-A39.pgn", n = 30)
